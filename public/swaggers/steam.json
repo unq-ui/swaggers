@@ -29,6 +29,15 @@
         "responses": {
           "200": {
             "description": "Successful login",
+            "headers": {
+              "Authorization": {
+                "description": "user JWT",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -68,6 +77,15 @@
         "responses": {
           "200": {
             "description": "Successful registration",
+            "headers": {
+              "Authorization": {
+                "description": "user JWT",
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -205,6 +223,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -274,6 +300,14 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -332,6 +366,16 @@
     "/users/current": {
       "get": {
         "summary": "Get logged-in user details",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "tags": [
           "User"
         ],
@@ -409,6 +453,14 @@
           {
             "in": "path",
             "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
             "required": true,
             "schema": {
               "type": "string"
