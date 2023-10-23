@@ -15,6 +15,7 @@ type NextPage = {
 const getSwaggerUrl = (nameApp: string): string => {
   const swaggers: ObjectWithStringKeys = {
     steam: '/swaggers/steam.json',
+    drinks: '/swaggers/drinks.json',
   }
   return swaggers[nameApp] || ''
 }
