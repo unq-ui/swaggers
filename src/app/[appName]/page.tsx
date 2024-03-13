@@ -16,6 +16,7 @@ const getSwaggerUrl = (nameApp: string): string => {
   const swaggers: ObjectWithStringKeys = {
     steam: '/swaggers/steam.json',
     drinks: '/swaggers/drinks.json',
+    tiktok: '/swaggers/tiktok.json',
   }
   return swaggers[nameApp] || ''
 }
