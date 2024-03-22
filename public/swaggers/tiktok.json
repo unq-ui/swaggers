@@ -151,6 +151,15 @@
         "tags": [
           "User"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditUserBody"
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "in": "header",
@@ -342,6 +351,15 @@
         "tags": [
           "Post"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostBody"
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "in": "header",
@@ -430,6 +448,15 @@
         "tags": [
           "Post"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostBody"
+              }
+            }
+          }
+        },
         "parameters": [
           {
             "in": "path",
