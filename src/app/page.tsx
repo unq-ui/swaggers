@@ -7,6 +7,7 @@ export default function Home() {
       <Link href={'/drinks'}>Drinks</Link>
       <Link href={'/steam'}>Steam</Link>
       <Link href={'/tiktok'}>Tiktok</Link>
+      <Link href={'/mercadolibre'}>MercadoLibre</Link>
     </main>
   )
 }

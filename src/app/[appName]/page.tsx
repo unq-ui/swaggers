@@ -17,6 +17,7 @@ const getSwaggerUrl = (nameApp: string): string => {
     steam: '/swaggers/steam.json',
     drinks: '/swaggers/drinks.json',
     tiktok: '/swaggers/tiktok.json',
+    mercadolibre: '/swaggers/mercadolibre.json',
   }
   return swaggers[nameApp] || ''
 }

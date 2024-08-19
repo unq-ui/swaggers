@@ -1,0 +1,1487 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MercadoLibre Api",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:7070",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "User Login",
+        "description": "Authenticate user and return a JWT token along with user details.",
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "headers": {
+              "Authorization": {
+                "description": "JWT token for the authenticated user",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid login credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "summary": "User Registration",
+        "description": "Register a new user and return a JWT token along with user details.",
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful registration",
+            "headers": {
+              "Authorization": {
+                "description": "JWT token for the authenticated user",
+                "schema": {
+                  "type": "string",
+                  "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid registration data or email already in use",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "summary": "Get User Details",
+        "description": "Get details of the authenticated user.",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "summary": "Get User Details by ID",
+        "description": "Get details of a user by ID.",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "User details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}/products": {
+      "get": {
+        "summary": "Get User Products",
+        "description": "Get products owned by a user.",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "Get All Products",
+        "description": "Get all products available.",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page number > 0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Product",
+        "description": "Create a new product.",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid product data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "summary": "Get Product by ID",
+        "description": "Get product details by ID.",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "Product details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Product",
+        "description": "Update product details.",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid product data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}/related": {
+      "get": {
+        "summary": "Get Related Products",
+        "description": "Get related products to a product by ID.",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of related products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimpleProductDTO"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}/like": {
+      "put": {
+        "summary": "Like Product",
+        "description": "toggle like a product by ID.",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product liked",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}/comment": {
+      "post": {
+        "summary": "Comment Product",
+        "description": "Comment on a product by ID.",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuestionBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Comment added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid comment data or try to comment on your own product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Product not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/{id}/comment/{commentId}": {
+      "put": {
+        "summary": "Update Comment",
+        "description": "Update a comment on a product by ID.",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuestionBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Comment updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid comment data or user is not the owner of the product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Comment not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/search": {
+      "get": {
+        "summary": "Search Products",
+        "description": "Search products by title.",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Product title"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Page number > 0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of products",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing query parameter or invalid page number",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "summary": "Get All Categories",
+        "description": "Get all product categories.",
+        "tags": [
+          "Categories"
+        ],
+        "responses": {
+          "200": {
+            "description": "List of categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "summary": "Get Category by ID",
+        "description": "Get category details by ID.",
+        "tags": [
+          "Categories"
+        ],
+        "responses": {
+          "200": {
+            "description": "Producto of category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Category not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cart": {
+      "get": {
+        "summary": "Get Cart",
+        "description": "Get the cart of the authenticated user.",
+        "tags": [
+          "Cart"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cart details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Add Product to Cart",
+        "description": "Add a product to the cart.",
+        "tags": [
+          "Cart"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product added to cart",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid product data or insufficient stock",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cart/{id}": {
+      "delete": {
+        "summary": "Remove Product from Cart",
+        "description": "Remove a product from the cart by ID.",
+        "tags": [
+          "Cart"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product removed from cart",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CartDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/purchase": {
+      "post": {
+        "summary": "Purchase Cart",
+        "description": "Purchase the products in the cart.",
+        "tags": [
+          "Cart"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Purchase successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid payment data or empty cart",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Id of category",
+            "example": "c_1"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of category",
+            "example": "Electronics"
+          }
+        }
+      },
+      "ProductBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Title of the product",
+            "example": "Smartphone"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the product",
+            "example": "A high-end smartphone with 128GB storage"
+          },
+          "price": {
+            "type": "number",
+            "format": "double",
+            "description": "Price of the product",
+            "example": 699.99
+          },
+          "images": {
+            "type": "array",
+            "description": "List of image URLs",
+            "items": {
+              "type": "string",
+              "example": "https://example.com/image1.jpg"
+            }
+          },
+          "stock": {
+            "type": "integer",
+            "description": "Number of items in stock",
+            "example": 50
+          },
+          "shipping": {
+            "$ref": "#/components/schemas/Shipping"
+          },
+          "characteristics": {
+            "type": "array",
+            "description": "List of product characteristics",
+            "items": {
+              "$ref": "#/components/schemas/Characteristic"
+            }
+          },
+          "categoryId": {
+            "type": "string",
+            "description": "ID of the product category",
+            "example": "12345"
+          }
+        }
+      },
+      "Shipping": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "description": "Shipping method",
+            "example": "Standard"
+          },
+          "cost": {
+            "type": "number",
+            "format": "double",
+            "description": "Cost of shipping",
+            "example": 9.99
+          },
+          "estimatedDelivery": {
+            "type": "string",
+            "format": "date",
+            "description": "Estimated delivery date",
+            "example": "2024-08-20"
+          }
+        }
+      },
+      "Characteristic": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the characteristic",
+            "example": "Color"
+          },
+          "value": {
+            "type": "string",
+            "description": "Value of the characteristic",
+            "example": "Black"
+          }
+        }
+      },
+      "QuestionBody": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "The text of the question",
+            "example": "What is the return policy?"
+          }
+        }
+      },
+      "CartBody": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "description": "ID of the product to be added to the cart",
+            "example": "12345"
+          },
+          "amount": {
+            "type": "integer",
+            "description": "Quantity of the product",
+            "example": 2
+          }
+        }
+      },
+      "PaymentBody": {
+        "type": "object",
+        "properties": {
+          "cardNumber": {
+            "type": "string",
+            "description": "Credit card number",
+            "example": "4111111111111111"
+          },
+          "expirationDate": {
+            "type": "string",
+            "description": "Expiration date of the credit card",
+            "example": "2025/08"
+          },
+          "cvv": {
+            "type": "string",
+            "description": "CVV code of the credit card",
+            "example": "123"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name on the credit card",
+            "example": "John Doe"
+          }
+        }
+      },
+      "LoginBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email address of the user",
+            "example": "a@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of the user",
+            "example": "a"
+          }
+        }
+      },
+      "RegisterBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Full name of the user",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the user",
+            "example": "user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of the user",
+            "example": "password123"
+          },
+          "image": {
+            "type": "string",
+            "description": "URL of the user's profile image",
+            "example": "https://example.com/profile.jpg"
+          }
+        }
+      },
+      "SimpleUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User ID",
+            "example": "user123"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's full name",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email address",
+            "example": "john.doe@example.com"
+          },
+          "image": {
+            "type": "string",
+            "description": "URL of the user's profile image",
+            "example": "https://example.com/profile.jpg"
+          }
+        }
+      },
+      "SimpleProductDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Product ID",
+            "example": "prod123"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the product",
+            "example": "Smartphone"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the product",
+            "example": "A high-end smartphone"
+          },
+          "price": {
+            "type": "number",
+            "format": "double",
+            "description": "Price of the product",
+            "example": 699.99
+          },
+          "images": {
+            "type": "array",
+            "description": "List of image URLs",
+            "items": {
+              "type": "string",
+              "example": "https://example.com/image1.jpg"
+            }
+          },
+          "owner": {
+            "$ref": "#/components/schemas/SimpleUser"
+          },
+          "category": {
+            "type": "string",
+            "description": "Product category",
+            "example": "Electronics"
+          },
+          "shipping": {
+            "type": "string",
+            "description": "Shipping details",
+            "example": "Standard shipping"
+          }
+        }
+      },
+      "ItemDTO": {
+        "type": "object",
+        "properties": {
+          "product": {
+            "$ref": "#/components/schemas/SimpleProductDTO"
+          },
+          "amount": {
+            "type": "integer",
+            "description": "Amount of the product",
+            "example": 2
+          }
+        }
+      },
+      "PaymentDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name on the credit card",
+            "example": "John Doe"
+          },
+          "cardNumber": {
+            "type": "string",
+            "description": "Credit card number",
+            "example": "4111111111111111"
+          },
+          "cvv": {
+            "type": "string",
+            "description": "CVV code of the credit card",
+            "example": "123"
+          },
+          "expirationDate": {
+            "type": "string",
+            "description": "Expiration date of the credit card",
+            "example": "2025/08"
+          }
+        }
+      },
+      "BuyHistoryDTO": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "description": "List of purchased items",
+            "items": {
+              "$ref": "#/components/schemas/ItemDTO"
+            }
+          },
+          "payment": {
+            "$ref": "#/components/schemas/PaymentDTO"
+          },
+          "date": {
+            "type": "string",
+            "description": "Purchase date",
+            "example": "2024/08/14"
+          }
+        }
+      },
+      "SaleHistoryDTO": {
+        "type": "object",
+        "properties": {
+          "product": {
+            "$ref": "#/components/schemas/SimpleProductDTO"
+          },
+          "amount": {
+            "type": "integer",
+            "description": "Amount of product sold",
+            "example": 1
+          },
+          "payment": {
+            "$ref": "#/components/schemas/PaymentDTO"
+          },
+          "date": {
+            "type": "string",
+            "description": "Sale date",
+            "example": "2024/08/14"
+          },
+          "user": {
+            "$ref": "#/components/schemas/SimpleUser"
+          }
+        }
+      },
+      "UserDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User ID",
+            "example": "user123"
+          },
+          "name": {
+            "type": "string",
+            "description": "User's full name",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email address",
+            "example": "john.doe@example.com"
+          },
+          "image": {
+            "type": "string",
+            "description": "URL of the user's profile image",
+            "example": "https://example.com/profile.jpg"
+          },
+          "buyHistory": {
+            "type": "array",
+            "description": "User's purchase history",
+            "items": {
+              "$ref": "#/components/schemas/BuyHistoryDTO"
+            }
+          },
+          "products": {
+            "type": "array",
+            "description": "List of products owned by the user",
+            "items": {
+              "$ref": "#/components/schemas/SimpleProductDTO"
+            }
+          },
+          "likedProducts": {
+            "type": "array",
+            "description": "List of products liked by the user",
+            "items": {
+              "$ref": "#/components/schemas/SimpleProductDTO"
+            }
+          },
+          "salesHistory": {
+            "type": "array",
+            "description": "User's sales history",
+            "items": {
+              "$ref": "#/components/schemas/SaleHistoryDTO"
+            }
+          }
+        }
+      },
+      "QuestionDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Question ID",
+            "example": "question123"
+          },
+          "user": {
+            "$ref": "#/components/schemas/SimpleUser"
+          },
+          "text": {
+            "type": "string",
+            "description": "Text of the question",
+            "example": "What is the warranty period?"
+          },
+          "response": {
+            "type": "string",
+            "description": "Response to the question",
+            "example": "The warranty period is 2 years."
+          }
+        }
+      },
+      "ProductDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Product ID",
+            "example": "prod123"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/SimpleUser"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title of the product",
+            "example": "Smartphone"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the product",
+            "example": "A high-end smartphone"
+          },
+          "images": {
+            "type": "array",
+            "description": "List of image URLs",
+            "items": {
+              "type": "string",
+              "example": "https://example.com/image1.jpg"
+            }
+          },
+          "stock": {
+            "type": "integer",
+            "description": "Stock available",
+            "example": 100
+          },
+          "price": {
+            "type": "number",
+            "format": "double",
+            "description": "Price of the product",
+            "example": 699.99
+          },
+          "shipping": {
+            "type": "string",
+            "description": "Shipping details",
+            "example": "Standard shipping"
+          },
+          "characteristics": {
+            "type": "array",
+            "description": "List of product characteristics",
+            "items": {
+              "type": "string",
+              "example": "Color: Black"
+            }
+          },
+          "category": {
+            "type": "string",
+            "description": "Product category",
+            "example": "Electronics"
+          },
+          "questions": {
+            "type": "array",
+            "description": "List of questions related to the product",
+            "items": {
+              "$ref": "#/components/schemas/QuestionDTO"
+            }
+          }
+        }
+      },
+      "PageDTO": {
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "array",
+            "description": "List of products on the current page",
+            "items": {
+              "$ref": "#/components/schemas/SimpleProductDTO"
+            }
+          },
+          "currentPage": {
+            "type": "integer",
+            "description": "Current page number",
+            "example": 1
+          },
+          "amountOfPages": {
+            "type": "integer",
+            "description": "Total number of pages",
+            "example": 10
+          },
+          "amountOfElements": {
+            "type": "integer",
+            "description": "Total number of elements",
+            "example": 100
+          }
+        }
+      },
+      "CartDTO": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/SimpleUser"
+          },
+          "items": {
+            "type": "array",
+            "description": "List of items in the cart",
+            "items": {
+              "$ref": "#/components/schemas/ItemDTO"
+            }
+          }
+        }
+      },
+      "ErrorDTO": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      }
+    }
+  }
+}
