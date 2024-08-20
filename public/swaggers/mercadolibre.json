@@ -165,7 +165,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserDTO"
+                  "$ref": "#/components/schemas/SimpleUser"
                 }
               }
             }
@@ -490,10 +490,10 @@
         }
       }
     },
-    "/products/{id}/comment": {
+    "/products/{id}/question": {
       "post": {
-        "summary": "Comment Product",
-        "description": "Comment on a product by ID.",
+        "summary": "Add question Product",
+        "description": "Question on a product by ID.",
         "tags": [
           "Products"
         ],
@@ -561,10 +561,10 @@
         }
       }
     },
-    "/products/{id}/comment/{commentId}": {
+    "/products/{id}/question/{questionId}": {
       "put": {
-        "summary": "Update Comment",
-        "description": "Update a comment on a product by ID.",
+        "summary": "Add answer of a Question",
+        "description": "Update a question with the answer by ID.",
         "tags": [
           "Products"
         ],
@@ -1244,7 +1244,7 @@
           }
         }
       },
-      "BuyHistoryDTO": {
+      "PurchaseHistoryDTO": {
         "type": "object",
         "properties": {
           "items": {
@@ -1311,11 +1311,11 @@
             "description": "URL of the user's profile image",
             "example": "https://example.com/profile.jpg"
           },
-          "buyHistory": {
+          "purchaseHistory": {
             "type": "array",
             "description": "User's purchase history",
             "items": {
-              "$ref": "#/components/schemas/BuyHistoryDTO"
+              "$ref": "#/components/schemas/PurchaseHistoryDTO"
             }
           },
           "products": {
