@@ -378,6 +378,16 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Error on token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
           }
         }
       }
@@ -602,7 +612,7 @@
             }
           },
           "404": {
-            "description": "Error post id not found",
+            "description": "Error post/comment id not found",
             "content": {
               "application/json": {
                 "schema": {
