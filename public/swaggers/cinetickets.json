@@ -1,0 +1,760 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CineTicket API",
+    "version": "1.0.0",
+    "description": "API para la gestión de cine y tickets"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:7000",
+      "description": "Servidor local"
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Iniciar sesión",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuario autenticado",
+            "headers": {
+              "Authorization": {
+                "description": "user JWT",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Credenciales inválidas"
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "summary": "Registrar usuario",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuario registrado",
+            "headers": {
+              "Authorization": {
+                "description": "user JWT",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          }
+        }
+      }
+    },
+    "/movies": {
+      "get": {
+        "summary": "Obtener todas las películas",
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de películas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MovieDTO"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falta el token"
+          },
+          "403": {
+            "description": "El usuario no es administrador"
+          }
+        }
+      },
+      "post": {
+        "summary": "Crear una nueva película",
+        "tags": [
+          "Admin"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovieBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Película creada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "401": {
+            "description": "Falta el token"
+          },
+          "403": {
+            "description": "El usuario no es administrador"
+          }
+        }
+      }
+    },
+    "/movies/{movieId}": {
+      "get": {
+        "summary": "Obtener una película por ID",
+        "tags": [
+          "Movies"
+        ],
+        "parameters": [
+          {
+            "name": "movieId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Película encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Película no encontrada"
+          }
+        }
+      }
+    },
+    "/released": {
+      "get": {
+        "summary": "Obtener las peliculas en cartelera",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Esta es la página que se pide, si falta el default es 1.",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "tags": [
+          "Movies"
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de Películas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoviePageDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Si la página no existe"
+          }
+        }
+      }
+    },
+    "/released/{movieId}": {
+      "get": {
+        "summary": "Obtener las funciones de la pelicula",
+        "parameters": [
+          {
+            "name": "movieId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Esta es la página que se pide, si falta el default es 1.",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "tags": [
+          "Movies"
+        ],
+        "responses": {
+          "200": {
+            "description": "Página de funciones de la Película",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieFunctionPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Película no encontrada o página no valida"
+          }
+        }
+      }
+    },
+    "/released/{movieId}/{functionId}": {
+      "get": {
+        "summary": "Obtener la funcion de la pelicula",
+        "parameters": [
+          {
+            "name": "movieId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "functionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Movies"
+        ],
+        "responses": {
+          "200": {
+            "description": "Funcion de la pelicula",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieFunctionDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Película o función no encontrada"
+          }
+        }
+      }
+    },
+    "/rooms": {
+      "get": {
+        "summary": "Obtiene todas las salas.",
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve todas las salas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoomDTO"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falta el token"
+          },
+          "403": {
+            "description": "El usuario no es administrador"
+          }
+        }
+      }
+    },
+    "/functions": {
+      "get": {
+        "summary": "Obtiene una página con funciones.",
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "description": "Esta es la página que se pide, si falta el default es 1.",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve la página con las funciones",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieFunctionPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "página no valida"
+          },
+          "401": {
+            "description": "Falta el token"
+          },
+          "403": {
+            "description": "El usuario no es administrador"
+          }
+        }
+      },
+      "post": {
+        "summary": "Crear una función.",
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovieFunctionBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve la función",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MovieFunctionDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos no validos"
+          },
+          "401": {
+            "description": "Falta el token"
+          },
+          "403": {
+            "description": "El usuario no es administrador"
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "summary": "Obtiene informacion del usuario logueado.",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve la información del usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Falta el token"
+          }
+        }
+      }
+    },
+    "/purchase": {
+      "post": {
+        "summary": "Crea una compra de entradas",
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve la información de la compra",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "si la pelicula no existe, si los asientos estan reservados"
+          },
+          "401": {
+            "description": "Falta el token"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LoginBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "RegisterBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "MovieBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "poster": {
+            "type": "string"
+          },
+          "releaseDate": {
+            "type": "string"
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "MovieFunctionBody": {
+        "type": "object",
+        "properties": {
+          "movieId": {
+            "type": "string"
+          },
+          "roomId": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          }
+        }
+      },
+      "PurchaseBody": {
+        "type": "object",
+        "properties": {
+          "functionId": {
+            "type": "string"
+          },
+          "seats": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UserDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseDTO"
+            }
+          },
+          "isAdmin": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PurchaseDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "movie": {
+            "$ref": "#/components/schemas/MovieDTO"
+          },
+          "roomName": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "seats": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "MovieDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "poster": {
+            "type": "string"
+          },
+          "releaseDate": {
+            "type": "string"
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "MovieFunctionDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "movie": {
+            "$ref": "#/components/schemas/MovieDTO"
+          },
+          "name": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "seats": {
+            "type": "integer"
+          }
+        }
+      },
+      "MoviePageDTO": {
+        "type": "object",
+        "properties": {
+          "currentPage": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MovieDTO"
+            }
+          },
+          "amountOfPages": {
+            "type": "integer"
+          },
+          "amountOfElements": {
+            "type": "integer"
+          }
+        }
+      },
+      "MovieFunctionPage": {
+        "type": "object",
+        "properties": {
+          "currentPage": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MovieFunctionDTO"
+            }
+          },
+          "amountOfPages": {
+            "type": "integer"
+          },
+          "amountOfElements": {
+            "type": "integer"
+          }
+        }
+      },
+      "RoomDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
