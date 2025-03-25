@@ -20,6 +20,7 @@ const getSwaggerUrl = (nameApp: string): string => {
     mercadolibre: '/swaggers/mercadolibre.json',
     medium: '/swaggers/medium.json',
     cinetickets: '/swaggers/cinetickets.json',
+    gog: '/swaggers/gog.json',
   }
   return swaggers[nameApp] || ''
 }
