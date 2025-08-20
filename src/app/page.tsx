@@ -9,6 +9,7 @@ export default function Home() {
       <Link href={'/tiktok'}>Tiktok</Link>
       <Link href={'/mercadolibre'}>MercadoLibre</Link>
       <Link href={'/gog'}>Gog</Link>
+      <Link href={'/instagram'}>Instagram</Link>
     </main>
   )
 }

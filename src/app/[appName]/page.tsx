@@ -21,6 +21,7 @@ const getSwaggerUrl = (nameApp: string): string => {
     medium: '/swaggers/medium.json',
     cinetickets: '/swaggers/cinetickets.json',
     gog: '/swaggers/gog.json',
+    instagram: '/swaggers/instagram.json',
   }
   return swaggers[nameApp] || ''
 }
